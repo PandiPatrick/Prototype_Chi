@@ -1,4 +1,5 @@
 package Character;
+import combat.*;
 
 public class Character {
 
@@ -34,8 +35,17 @@ public class Character {
 
     //endregion
 
+    //region The weapon used
+    //modify or tell me how to add this otherwise
 
+    private weapons current = new weapons();
+    //citire current din JSon sau inventory (?)
+    double dmg = current.getDamage();
 
+    public double getDmg() {
+        return dmg;
+    }
 
+    //endregion
 
 }
