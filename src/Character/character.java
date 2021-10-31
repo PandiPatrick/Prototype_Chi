@@ -3,9 +3,21 @@ import combat.*;
 
 public class character {
 
+    public double run = 0; //I'll set it public until i figure out how to protect it while also easily using it
+
+
+    private int n; //putem seta abilitatea prin n cand construim caracterul?
+    abilities ability = new abilities(n);  //maybe set the ability when creating the character using the constructor?
+
+
+    private boolean alive = true;
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
     //region Name
 
-    public character(String name) { this.Name = name; }
+    public character(String name, int n) { this.Name = name; this.n = n;}
 
     private String Name;
     public void setName(String setName){
@@ -33,9 +45,19 @@ public class character {
     double dmg = current.getDamage();
 
     public double getDmg() {
-        return dmg;
+        return ability.getDamage();
     }
+    public double getStaminaCost() {
+        return ability.getStamina1();
+    }
+    public double getRun(){return ability.getSpeed();}
 
+    public void setRun(){
+        this.run = getRun();
+    }
     //endregion
+
+
+
 
 }
