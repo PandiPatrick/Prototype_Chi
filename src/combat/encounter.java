@@ -8,23 +8,23 @@ import java.util.Scanner;
 public class encounter {
     Scanner sc = new Scanner(System.in);
     Random rnd=new Random();
-    Character.Character player;
-    Character.Character enemy;
+    character player;
+    character enemy;
 
     private double playerDmg = player.getDmg();
     private double enemyDmg = enemy.getDmg();
 
-    public void healthDown(Character.Character target, double value){
+    public void healthDown(character target, double value){
         double current = target.Health.getValue();
         target.Health.setValue(current - value);
     }
 
-    public void healthUp(Character.Character target, double value){
+    public void healthUp(character target, double value){
         double current = target.Health.getValue();
         target.Health.setValue(current + value);
     }
 
-    public double HP(Character.Character target){
+    public double HP(character target){
         return target.Health.getValue();
     }
 

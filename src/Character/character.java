@@ -1,11 +1,11 @@
 package Character;
 import combat.*;
 
-public class Character {
+public class character {
 
     //region Name
 
-    public Character (String name) { this.Name = name; }
+    public character(String name) { this.Name = name; }
 
     private String Name;
     public void setName(String setName){
