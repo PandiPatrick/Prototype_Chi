@@ -10,7 +10,9 @@ public class GameLoop implements Runnable {
     private long nextStatTime;
     private int fps, ups;
 
-    public GameLoop(Game game) { this.game = game; }
+    public GameLoop(Game game) {
+        this.game = game;
+    }
 
     @Override
     public void run() {
@@ -19,16 +21,14 @@ public class GameLoop implements Runnable {
         long currentTime, lastUpdate = System.currentTimeMillis();
         nextStatTime = System.currentTimeMillis() + 1000;
 
-        
-
         while(running) {
             currentTime = System.currentTimeMillis();
             double lastRenderTimeInSeconds = (currentTime - lastUpdate) / 1000d;
             accumulator += lastRenderTimeInSeconds;
             lastUpdate = currentTime;
 
-            if (accumulator >= updateRate) {
-                while (accumulator > updateRate) {
+            if(accumulator >= updateRate) {
+                while(accumulator >= updateRate) {
                     update();
                     accumulator -= updateRate;
                 }
@@ -36,8 +36,6 @@ public class GameLoop implements Runnable {
             }
             printStats();
         }
-
-
     }
 
     private void printStats() {
