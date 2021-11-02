@@ -1,0 +1,35 @@
+{
+
+  "save1": {
+    "isActive": "true",
+    "char1": {
+      "name":"matt",
+      "isAlive": "true",
+      "location":["50", "50"],
+      "metrics": ["100", "100"]
+    }}
+
+,
+
+  "save2": {
+    "isActive": "true",
+    "char1": {
+      "name":"dave",
+      "isAlive": "true",
+      "location": ["250", "100"],
+      "metrics": ["100", "100"]
+    }}
+
+,
+
+  "save3": {
+    "isActive": "true",
+    "char1": {
+      "name":"dave",
+      "isAlive": "false",
+      "location": ["350", "200"],
+      "metrics": ["100", "100"]
+    }}
+
+
+}
