@@ -27,8 +27,6 @@ public class character {
 
     private double enemyDamage;
 
-
-    private int n; //putem seta abilitatea prin n cand construim caracterul?
     public abilities ability1 = new abilities(1);  //maybe set the ability when creating the character using the constructor?
     public abilities ability2 = new abilities(2);
     public abilities ability3 = new abilities(3);
