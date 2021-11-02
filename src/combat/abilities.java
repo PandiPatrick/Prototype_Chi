@@ -3,7 +3,8 @@ import Character.*;
 
 public class abilities {
     private double dmg;
-    private int speed;
+    private int speed = 0;
+    private int speedCost;
     private int staminaCost;
     private String name;
 
@@ -12,19 +13,19 @@ public class abilities {
         switch(optiune) {
             case 1:
                 this.dmg = 25;
-                this.speed = 1;
+                this.speedCost = 2;
                 this.staminaCost = 10;
                 this.name = "Average";
                 break;
             case 2:
                 this.dmg = 50;
-                this.speed = 3;
+                this.speedCost = 3;
                 this.staminaCost = 25;
                 this.name = "Strong";
                 break;
             case 3:
                 this.dmg = 20;
-                this.speed = 0;
+                this.speedCost = 1;
                 this.staminaCost = 10;
                 this.name = "Fast";
                 break;
@@ -38,6 +39,14 @@ public class abilities {
     public double getStamina1() {
         return staminaCost;
     }
+
+    public void used(){
+        this.speed+=speedCost;
+    }
+    public void turn() {
+        speed--;
+    }
+
 
     public int getSpeed() {
         return speed;

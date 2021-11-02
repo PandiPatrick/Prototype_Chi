@@ -3,11 +3,35 @@ import combat.*;
 
 public class character {
 
-    public double run = 0; //I'll set it public until i figure out how to protect it while also easily using it
+    //region constructor
+
+    //player
+    public character(String name, double health, double stamina) {
+        this.Name = name;
+        Health.setValue(health);
+        Stamina.setValue(stamina);
+    }
+
+    //enemy
+    public character(int enemyDamage,String name, double health){
+        this.Name = name;
+        this.enemyDamage = enemyDamage;
+        Health.setValue(health);
+    }
+
+    //end region
+
+
+
+    //public double run = 0; //I'll set it public until i figure out how to protect it while also easily using it
+
+    private double enemyDamage;
 
 
     private int n; //putem seta abilitatea prin n cand construim caracterul?
-    abilities ability = new abilities(n);  //maybe set the ability when creating the character using the constructor?
+    public abilities ability1 = new abilities(1);  //maybe set the ability when creating the character using the constructor?
+    public abilities ability2 = new abilities(2);
+    public abilities ability3 = new abilities(3);
 
 
     private boolean alive = true;
@@ -17,7 +41,7 @@ public class character {
     }
     //region Name
 
-    public character(String name, int n) { this.Name = name; this.n = n;}
+
 
     private String Name;
     public void setName(String setName){
@@ -44,20 +68,23 @@ public class character {
     //citire current din JSon sau inventory (?)
     double dmg = current.getDamage();
 
-    public double getDmg() {
+    public double getDmg(abilities ability) {
         return ability.getDamage();
     }
-    public double getStaminaCost() {
+    public double getStaminaCost(abilities ability) {
         return ability.getStamina1();
     }
-    public double getRun(){return ability.getSpeed();}
+    public double getRun(abilities ability){return ability.getSpeed();}
 
-    public void setRun(){
-        this.run = getRun();
-    }
+
     //endregion
 
-
+    public void setEnemyDamage(double enemyDamage){
+        this.enemyDamage = enemyDamage;
+    }
+    public double getEnemyDamage(){
+        return this.enemyDamage;
+    }
 
 
 }
