@@ -16,6 +16,8 @@ public enum Direction {
         this.animationRow = animationRow;
     }
 
+
+    // Determines the direction of walking by the changes of motion vector in the XY axis
     public static Direction fromMotion(Motion motion) {
         double x = motion.getVector().getX();
         double y = motion.getVector().getY();

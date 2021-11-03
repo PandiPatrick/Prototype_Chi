@@ -1,5 +1,4 @@
 package combat;
-import Character.*;
 
 public class abilities {
     private double dmg;
@@ -35,10 +34,9 @@ public class abilities {
     public double getDamage() {
         return dmg;
     }
-    public double getStamina1() {
+    public double getStamina() {
         return staminaCost;
     }
-
     public int getSpeed() {
         return speed;
     }

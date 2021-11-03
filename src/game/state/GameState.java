@@ -18,6 +18,7 @@ public class GameState extends State {
         super(windowSize, input);
         gameMap = new GameMap(new Size(20, 20), spriteLibrary);
         initializeCharacters();
+        initializeNPCs(50);
     }
 
     private void initializeCharacters() {
@@ -26,5 +27,12 @@ public class GameState extends State {
         npc.setPosition(new Position(3 * Game.SPRITE_SIZE, 2 * Game.SPRITE_SIZE));
         gameObjects.addAll(List.of(player, npc));
         camera.focusOn(player);
+    }
+    private void initializeNPCs(int numberOfNPCs) {
+        for(int i = 0; i < numberOfNPCs; i++) {
+            NPC npc = new NPC(new NPCController(), spriteLibrary);
+            npc.setPosition(gameMap.getRandomPosition());
+            gameObjects.add(npc);
+        }
     }
 }

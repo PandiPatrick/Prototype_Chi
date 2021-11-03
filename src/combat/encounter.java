@@ -4,28 +4,94 @@ import Character.*;
 import java.util.Random;
 import java.util.Scanner;
 
-
-public class encounter {
+public class encounter implements Runnable{
     Scanner sc = new Scanner(System.in);
     Random rnd=new Random();
 
-    character player1;
-    character player2;
-    character player3;
-    character enemy1;
-    character enemy2;
-    character enemy3;
+    character player[] = new character[4];
+    character enemy[] = new character[4];
+    character missedDummy = new character("Dummy",1, true);
 
     public encounter(character player1, character player2, character player3, character enemy1, character enemy2, character enemy3){
-        this.player1 = player1;
-        this.player2 = player2;
-        this.player3 = player3;
-        this.enemy1 = enemy1;
-        this.enemy2 = enemy2;
-        this.enemy3 = enemy3;
+        this.player[1] = player1;
+        this.player[2] = player2;
+        this.player[3] = player3;
+        this.enemy[1] = enemy1;
+        this.enemy[2] = enemy2;
+        this.enemy[3] = enemy3;
+
+        missedDummy.Health.setValue(999999);
+
+        fight:
+        while(true){ // until either all enemies or all players die or they run away
+            //mesaje de combat + stats(?) - UI
+
+            point:
+            for (int i = 1; i <= 3; i++) {
+
+                //if (!player[i].isAlive()) break point;
+
+                int opt = sc.nextInt(); //we can modify this after both the UI and logic is done
+                double stamina = player[i].Stamina.getValue();
+                switch (opt) {
+                    case 1: //Attack
+                        attack(1, i, stamina);
+                        System.out.println("Attacked Enemy 1 with Player " + i);
+                        break;
+                    case 2:
+                        attack(2, i, stamina);
+                        System.out.println("Attacked Enemy 2 with Player " + i);
+                        break;
+                    case 3:
+                        attack(3, i, stamina);
+                        System.out.println("Attacked Enemy 3 with Player " + i);
+                        break;
+                    case 4: //Run
+                        if (runAway()) break fight;
+                    case 5: //Inventory and use health potion
+                        healthUp(player[i], 50);
+                        System.out.println("Player " + i + " chugged a Potion and gained 50 Health");
+                        break; //we'll use a variable instead of 50
+                    case 6:
+                        for (int j = 1; j <= 3; j++) {
+                            player[j].printStats();
+                        }
+                        System.out.println();
+                        for (int j = 1; j <= 3; j++) {
+                            enemy[j].printStats();
+                        }
+                        i--;
+                        break;
+                }
+            }
+
+            if(enemy[1].isAlive()){
+                healthDown(randomTarget(), enemy[1].getDmg());
+            }
+            if(enemy[2].isAlive()){
+                healthDown(randomTarget(), enemy[2].getDmg());
+            }
+            if(enemy[3].isAlive()){
+                healthDown(randomTarget(), enemy[3].getDmg());
+            }
+
+            if(!enemy[1].isAlive() && !enemy[2].isAlive() && !enemy[3].isAlive()){
+                System.out.println("Victory");
+                break fight;
+            }
+            if(!player[1].isAlive() && !player[2].isAlive() && !player[3].isAlive()){
+                System.out.println("Defeat");
+                break fight;
+            }
+
+            player[1].run --;
+            player[2].run --;
+            player[3].run --;
+
+        }
+
     }
     //you can send already created characters with already established stats where you call the encounter
-
 
 /*
     private double playerDmg1 = player1.getDmg();
@@ -37,220 +103,62 @@ public class encounter {
 */
 
     public void healthDown(character target, double value){
-        double current = target.Health.getValue();
-        target.Health.setValue(current - value);
+        target.Health.setValue(target.Health.getValue() - value);
+        if (target.Health.getValue()<=0) {
+            target.setAlive(false);
+            System.out.println("Character died");
+        }
     }
 
     public void healthUp(character target, double value){
-        double current = target.Health.getValue();
-        target.Health.setValue(current + value);
+        target.Health.setValue(target.Health.getValue() + value);
     }
 
-    public double HP(character target){
-        return target.Health.getValue();
-    }
-
-    public void runAway(){
-        int x = rnd.nextInt(11);
-
+    public boolean runAway(){
+        int x = rnd.nextInt(2);
         if(x==1) {
-            healthDown(this.player1, 20); //we can change this however we want
-            healthDown(this.player2, 20);
-            healthDown(this.player3, 20);
-        }
-            //print message on screen then end combat
-        else
-            System.out.println("bravo");
-            //print message on screen then end combat
-    }
-
-    public void attack(character player, character target){
-        double dmg = player.getDmg();
-        healthDown(target, dmg);
-    }
-
-    public boolean alive(character target){
-        if(HP(target)<1){
+            healthDown(this.player[1], 20); //we can change this however we want
+            healthDown(this.player[2], 20);
+            healthDown(this.player[3], 20);
+            System.out.println("Escape Attempt Failed");
             return false;
         }
         else
-            return true;
+            System.out.println("Escape Attempt Successful");
+        return true;
+    }
+
+    public void attack(character player, character target){
+        healthDown(target, player.getDmg());
     }
 
     public character randomTarget(){
         int n = rnd.nextInt(3);
 
-        if(n==0 && alive(player1)==true)
-            return player1;
-        else if(n==1 && alive(player2)==true)
-            return player2;
-        else if(n==2 && alive(player3)==true)
-            return player3;
-
-        return null;
+        if(n==0 && player[1].isAlive())
+            return player[1];
+        else if(n==1 && player[2].isAlive())
+            return player[2];
+        else if(n==2 && player[3].isAlive())
+            return player[3];
+        else return missedDummy;
     }
 
-    public void fight(){
-        double stamina;
-        boolean x = true; //the check for the combat loop (you or the enemy is dead)
+    public void attack(int enemyNumber, int attacker, double stamina){
+        if(player[attacker].run == 0 && stamina>player[attacker].getStaminaCost() ){ //maybe make the button invisible for that option in the UI if that's the case?
+            attack(player[attacker], enemy[enemyNumber]);
+            if (!enemy[enemyNumber].isAlive());
 
-        while(x){ // until either all enemies or all players die or they run away
-            //mesaje de combat + stats(?) - UI
-
-            int opt = sc.nextInt(); //we can modify this after both the UI and logic is done
-            stamina = player1.Stamina.getValue();
-            switch (opt) {
-                    case 1: //Attack
-                        if(player1.run == 0 && stamina>player1.getStaminaCost() ){ //maybe make the button invisible for that option in the UI if that's the case?
-                        attack(player1, enemy1);
-                            if (alive(enemy1)==false);
-
-                            //xp++
-                            player1.Stamina.setValue(stamina - player1.getStaminaCost());
-                            player1.setRun();
-
-                        }
-                        break;
-                    case 2:
-                        if(player1.run == 0 && stamina>player1.getStaminaCost() ){
-                        attack(player1, enemy2);
-
-                            if (alive(enemy2)==false);
-
-                            //xp++
-                            player1.Stamina.setValue(stamina - player1.getStaminaCost());
-                            player1.setRun();
-                            }
-                        break;
-                    case 3:
-                        if(player1.run == 0 && stamina>player1.getStaminaCost() ){
-                        attack(player1, enemy3);
-                            if (alive(enemy3)==false);
-
-                            //xp++
-                            player1.Stamina.setValue(stamina - player1.getStaminaCost());
-                            player1.setRun();
-                            }
-                        break;//we'll use a variable instead of 50
-                    case 4: //Run
-                        runAway();
-                        break;
-                    case 5: //Inventory and use health potion
-                        healthUp(player1, 50);
-                        break;//we'll use a variable instead of 50
-             }
-
-            opt = sc.nextInt(); //we can modify this after both the UI and logic is done
-            stamina = player2.Stamina.getValue();
-            switch (opt) {
-                case 1: //Attack
-                    if(player2.run == 0 && stamina>player2.getStaminaCost() ){
-                    attack(player2, enemy1);
-
-                        if (alive(enemy1)==false);
-
-                        //xp++
-                        player2.Stamina.setValue(stamina - player1.getStaminaCost());
-                        player2.setRun();
-                    }
-                    break;
-                case 2:
-                    if(player2.run == 0 && stamina>player2.getStaminaCost() ){
-                    attack(player2, enemy2);
-
-                        if (alive(enemy2)==false);
-
-                        //xp++
-                        player2.Stamina.setValue(stamina - player1.getStaminaCost());
-                        player2.setRun();
-                    }
-                    break;
-                case 3:
-                    if(player2.run == 0 && stamina>player2.getStaminaCost() ){
-                    attack(player2, enemy3);
-
-                        if (alive(enemy3)==false);
-
-                        //xp++
-                        player2.Stamina.setValue(stamina - player1.getStaminaCost());
-                        player2.setRun();
-                    }
-                    break;//we'll use a variable instead of 50
-                case 4: //Run
-                    runAway();
-                    break;
-                case 5: //Inventory and use health potion
-                    healthUp(player2, 50);
-                    break;//we'll use a variable instead of 50
-            }
-
-            opt = sc.nextInt(); //we can modify this after both the UI and logic is done
-            stamina = player3.Stamina.getValue();
-            switch (opt) {
-                case 1: //Attack
-                    if(player3.run == 0 && stamina>player3.getStaminaCost() ){
-                    attack(player3, enemy1);
-                        if (alive(enemy1)==false);
-
-                        //xp++
-                        player3.Stamina.setValue(stamina - player1.getStaminaCost());
-                        player3.setRun();
-                    }
-                    break;
-                case 2:
-                    if(player3.run == 0 && stamina>player3.getStaminaCost() ){
-                    attack(player3, enemy2);
-                        if (alive(enemy2)==false);
-
-                        //xp++
-                        player3.Stamina.setValue(stamina - player1.getStaminaCost());
-                        player3.setRun();
-                    }
-                    break;
-                case 3:
-                    if(player3.run == 0 && stamina>player3.getStaminaCost() ){
-                    attack(player3, enemy3);
-                    if (alive(enemy3)==false);
-
-                    //xp++
-                        player3.Stamina.setValue(stamina - player1.getStaminaCost());
-                        player3.setRun();
-                    }
-                    break;//we'll use a variable instead of 50
-                case 4: //Run
-                    runAway();
-                    break;
-                case 5: //Inventory and use health potion
-                    healthUp(player1, 50);
-                    break;//we'll use a variable instead of 50
-            }
-
-            if(HP(enemy1)>1){
-                healthDown(randomTarget(), enemy1.getDmg());
-            }
-            if(HP(enemy2)>1){
-                healthDown(randomTarget(), enemy2.getDmg());
-            }
-            if(HP(enemy3)>1){
-                healthDown(randomTarget(), enemy3.getDmg());
-            }
-
-            if(alive(enemy1)==false && alive(enemy2)==false && alive(enemy3)==false){
-                x = false;
-                //end combat after win message
-            }
-            if(alive(player1)==false && alive(player2)==false && alive(player3)==false){
-                x = false;
-                //end combat
-                //game over screen
-            }
-
-            player1.run --;
-            player2.run --;
-            player3.run --;
+            //xp++
+            player[attacker].Stamina.setValue(stamina - player[attacker].getStaminaCost());
+            player[attacker].setRun();
 
         }
-
     }
 
+
+    @Override
+    public void run() {
+
+    }
 }

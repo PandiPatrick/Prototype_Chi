@@ -1,19 +1,14 @@
 package game;
 
-import controller.PlayerController;
 import core.Size;
 import display.Display;
-import entity.GameObject;
-import entity.Player;
 import game.state.GameState;
 import game.state.State;
-import gfx.SpriteLibrary;
 import input.Input;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Game {
+
+    //region FIELDS
 
     public static int SPRITE_SIZE = 64;
 
@@ -21,11 +16,19 @@ public class Game {
     private Input input;
     private State state;
 
+    //endregion
+
+    //region Game Constructor
+
     public Game(int width, int height) {
         input = new Input();
         display = new Display(width, height, input);
         state = new GameState(new Size(width, height), input);
     }
+
+    //endregion
+
+    //region Update & Render
 
     public void update() {
         state.update();
@@ -34,4 +37,6 @@ public class Game {
     public void render() {
         display.render(state);
     }
+
+    //endregion
 }

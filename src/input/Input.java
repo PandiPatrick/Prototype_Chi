@@ -11,9 +11,12 @@ public class Input implements KeyListener {
         pressed = new boolean[255];
     }
 
+    // Returns true or false if the Key is pressed
     public boolean isPressed(int keyCode) {
         return pressed[keyCode];
     }
+
+    //region KeyListener abstract method area
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -27,4 +30,6 @@ public class Input implements KeyListener {
     public void keyReleased(KeyEvent e) {
         pressed[e.getKeyCode()] = false;
     }
+
+    //endregion
 }

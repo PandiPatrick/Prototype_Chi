@@ -31,4 +31,5 @@ public class PlayerController implements Controller {
     public boolean isRequestingRight() {
         return input.isPressed(KeyEvent.VK_RIGHT);
     }
+
 }

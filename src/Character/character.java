@@ -5,19 +5,23 @@ public class character {
 
     public double run = 0; //I'll set it public until i figure out how to protect it while also easily using it
 
-
-    private int n; //putem seta abilitatea prin n cand construim caracterul?
-    abilities ability = new abilities(n);  //maybe set the ability when creating the character using the constructor?
-
-
     private boolean alive = true;
 
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
+    public boolean isAlive() {
+        return alive;
+    }
+    abilities ability;
+
     //region Name
 
-    public character(String name, int n) { this.Name = name; this.n = n;}
+    public character(String name, int ability, boolean alive) {
+        this.Name = name;
+        this.ability = new abilities(ability);
+        this.alive = alive;
+    }
 
     private String Name;
     public void setName(String setName){
@@ -48,7 +52,7 @@ public class character {
         return ability.getDamage();
     }
     public double getStaminaCost() {
-        return ability.getStamina1();
+        return ability.getStamina();
     }
     public double getRun(){return ability.getSpeed();}
 
@@ -57,6 +61,9 @@ public class character {
     }
     //endregion
 
+    public void printStats(){
+        System.out.println(Name + " has " + Health.getValue() + " Health and " + Stamina.getValue() + " Stamina");
+    }
 
 
 
